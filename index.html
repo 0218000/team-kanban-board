@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>团队任务看板</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>团队任务看板</h1>
+  <div class="add-task-area">
+    <input type="text" id="taskInput" placeholder="输入新任务，回车添加">
+    <button onclick="addTask(document.getElementById('taskInput').value)">添加任务</button>
+  </div>
+  <div class="board">
+    <div class="column" data-status="todo">
+      <h2>待办</h2>
+      <div class="task-list"></div>
+    </div>
+    <div class="column" data-status="doing">
+      <h2>进行中</h2>
+      <div class="task-list"></div>
+    </div>
+    <div class="column" data-status="done">
+      <h2>已完成</h2>
+      <div class="task-list"></div>
+    </div>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
