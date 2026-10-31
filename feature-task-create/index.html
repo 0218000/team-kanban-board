@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>团队任务看板</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="board-header">
+    <h1>团队任务看板</h1>
+    <button id="new-task-btn" class="btn-primary">+ 新建任务</button>
+  </header>
+
+  <main class="board" id="board"></main>
+
+  <!-- 新建任务弹窗表单 -->
+  <div class="modal-mask" id="modal-mask" hidden>
+    <div class="modal">
+      <h2>新建任务</h2>
+      <label>标题<input type="text" id="f-title" placeholder="任务标题" maxlength="50"></label>
+      <label>描述<textarea id="f-desc" rows="3" placeholder="任务描述（可选）"></textarea></label>
+      <label>优先级
+        <select id="f-priority">
+          <option value="高">高</option>
+          <option value="中" selected>中</option>
+          <option value="低">低</option>
+        </select>
+      </label>
+      <label>负责人<input type="text" id="f-owner" placeholder="负责人姓名（可选）"></label>
+      <div class="modal-actions">
+        <button id="f-cancel" class="btn-ghost">取消</button>
+        <button id="f-save" class="btn-primary">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
