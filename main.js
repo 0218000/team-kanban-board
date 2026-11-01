@@ -1,58 +1,81 @@
-function getTasks() {
-  return JSON.parse(localStorage.getItem('kanbanTasks') || '[]');
+// 看板任务数据
+let taskList = {
+  todo: [],
+  doing: [],
+  done: []
+};
+
+// 打开新增任务弹窗
+function openAddModal() {
+  document.getElementById('modal').style.display = 'block';
 }
-function saveTasks(tasks) {
-  localStorage.setItem('kanbanTasks', JSON.stringify(tasks));
+
+// 关闭弹窗
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+  // 清空表单
+  document.getElementById('taskTitle').value = '';
+  document.getElementById('taskDesc').value = '';
+  document.getElementById('taskOwner').value = '';
 }
-function addTask(title) {
-  if (!title.trim()) return;
-  const tasks = getTasks();
-  tasks.push({ id: Date.now(), title: title, status: 'todo' });
-  saveTasks(tasks);
-  renderTasks();
-  document.getElementById('taskInput').value = '';
+
+// 保存任务
+function saveTask() {
+  const title = document.getElementById('taskTitle').value.trim();
+  const desc = document.getElementById('taskDesc').value.trim();
+  const priority = document.getElementById('taskPriority').value;
+  const owner = document.getElementById('taskOwner').value.trim();
+
+  if (!title) {
+    alert("任务标题不能为空！");
+    return;
+  }
+
+  const task = {
+    id: Date.now(),
+    title,
+    desc,
+    priority,
+    owner
+  };
+  // 默认放到待办
+  taskList.todo.push(task);
+  renderBoard();
+  closeModal();
 }
-function deleteTask(id) {
-  let tasks = getTasks();
-  tasks = tasks.filter(t => t.id !== id);
-  saveTasks(tasks);
-  renderTasks();
+
+// 渲染看板
+function renderBoard() {
+  // 根据data-status找到对应列里的task-list
+  const todoWrap = document.querySelector('.column[data-status="todo"] .task-list');
+  const doingWrap = document.querySelector('.column[data-status="doing"] .task-list');
+  const doneWrap = document.querySelector('.column[data-status="done"] .task-list');
+
+  todoWrap.innerHTML = '';
+  doingWrap.innerHTML = '';
+  doneWrap.innerHTML = '';
+
+  function createCard(task) {
+    const div = document.createElement('div');
+    div.className = 'task-card';
+    div.innerHTML = `
+      <h4>${task.title}</h4>
+      <p>${task.desc || '无描述'}</p>
+      <p>优先级：${task.priority}</p>
+      <p>负责人：${task.owner || '未分配'}</p>
+    `;
+    return div;
+  }
+
+  taskList.todo.forEach(t => todoWrap.appendChild(createCard(t)));
+  taskList.doing.forEach(t => doingWrap.appendChild(createCard(t)));
+  taskList.done.forEach(t => doneWrap.appendChild(createCard(t)));
 }
-function renderTasks() {
-  const tasks = getTasks();
-  document.querySelectorAll('.task-list').forEach(el => el.innerHTML = '');
-  tasks.forEach(task => {
-    const column = document.querySelector(`[data-status="${task.status}"] .task-list`);
-    if (!column) return;
-    const card = document.createElement('div');
-    card.className = 'task-card';
-    card.draggable = true;
-    card.dataset.id = task.id;
-    card.innerHTML = `<span>${task.title}</span><button class="delete-btn" onclick="deleteTask(${task.id})">×</button>`;
-    card.addEventListener('dragstart', dragStart);
-    column.appendChild(card);
-  });
-}
-let draggedId = null;
-function dragStart(e) {
-  draggedId = parseInt(e.target.dataset.id);
-  e.dataTransfer.effectAllowed = 'move';
-}
-document.querySelectorAll('.column').forEach(column => {
-  column.addEventListener('dragover', e => e.preventDefault());
-  column.addEventListener('drop', e => {
-    e.preventDefault();
-    const newStatus = column.dataset.status;
-    let tasks = getTasks();
-    tasks = tasks.map(t => {
-      if (t.id === draggedId) t.status = newStatus;
-      return t;
-    });
-    saveTasks(tasks);
-    renderTasks();
-  });
-});
-document.getElementById('taskInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') addTask(e.target.value);
-});
-renderTasks();
+
+// 绑定按钮事件
+document.getElementById('addTaskBtn').onclick = openAddModal;
+document.getElementById('saveTaskBtn').onclick = saveTask;
+document.querySelector('.close').onclick = closeModal;
+
+// 初始化渲染
+renderBoard();
