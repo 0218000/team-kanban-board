@@ -7,12 +7,12 @@ let taskList = {
 
 // 打开新增任务弹窗
 function openAddModal() {
-  document.getElementById('taskModal').style.display = 'block';
+  document.getElementById('modal').style.display = 'block';
 }
 
 // 关闭弹窗
 function closeModal() {
-  document.getElementById('taskModal').style.display = 'none';
+  document.getElementById('modal').style.display = 'none';
   // 清空表单
   document.getElementById('taskTitle').value = '';
   document.getElementById('taskDesc').value = '';
@@ -27,7 +27,7 @@ function saveTask() {
   const owner = document.getElementById('taskOwner').value.trim();
 
   if (!title) {
-    alert('任务标题不能为空！');
+    alert("任务标题不能为空！");
     return;
   }
 
@@ -46,9 +46,11 @@ function saveTask() {
 
 // 渲染看板
 function renderBoard() {
-  const todoWrap = document.getElementById('todo-list');
-  const doingWrap = document.getElementById('doing-list');
-  const doneWrap = document.getElementById('done-list');
+  // 根据data-status找到对应列里的task-list
+  const todoWrap = document.querySelector('.column[data-status="todo"] .task-list');
+  const doingWrap = document.querySelector('.column[data-status="doing"] .task-list');
+  const doneWrap = document.querySelector('.column[data-status="done"] .task-list');
+
   todoWrap.innerHTML = '';
   doingWrap.innerHTML = '';
   doneWrap.innerHTML = '';
@@ -73,7 +75,7 @@ function renderBoard() {
 // 绑定按钮事件
 document.getElementById('addTaskBtn').onclick = openAddModal;
 document.getElementById('saveTaskBtn').onclick = saveTask;
-document.getElementById('closeModalBtn').onclick = closeModal;
+document.querySelector('.close').onclick = closeModal;
 
 // 初始化渲染
 renderBoard();
