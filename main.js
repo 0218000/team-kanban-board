@@ -56,15 +56,51 @@ function renderBoard() {
       <p>${task.desc || '无描述'}</p>
       <p>优先级：${task.priority}</p>
       <p>负责人：${task.owner || '未分配'}</p>
+      <button type="button" class="delete-btn" draggable="false" title="删除任务">🗑</button>
     `;
     div.addEventListener('dragstart', (e) => {
       e.dataTransfer.setData('taskId', task.id);
+    });
+    // 删除按钮：阻止冒泡，避免点到按钮时触发卡片拖拽
+    const delBtn = div.querySelector('.delete-btn');
+    delBtn.addEventListener('mousedown', (e) => e.stopPropagation());
+    delBtn.addEventListener('dragstart', (e) => e.preventDefault());
+    delBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      deleteTask(task.id);
     });
     return div;
   }
   taskList.todo.forEach(t => todoWrap.appendChild(createCard(t)));
   taskList.doing.forEach(t => doingWrap.appendChild(createCard(t)));
   taskList.done.forEach(t => doneWrap.appendChild(createCard(t)));
+
+  // 刷新每列的任务数量
+  document.querySelectorAll('.column').forEach(col => {
+    const count = taskList[col.dataset.status].length;
+    let badge = col.querySelector('.task-count');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'task-count';
+      col.querySelector('h3').appendChild(badge);
+    }
+    badge.textContent = count;
+  });
+}
+
+// 删除任务：先弹确认框，确认后从所在列移除并重新渲染
+function deleteTask(taskId) {
+  for (const key of ['todo', 'doing', 'done']) {
+    const idx = taskList[key].findIndex(item => item.id === taskId);
+    if (idx === -1) continue;
+
+    const task = taskList[key][idx];
+    if (!window.confirm('确定删除任务「' + task.title + '」吗？')) return;
+
+    taskList[key].splice(idx, 1);
+    renderBoard();
+    return;
+  }
 }
 
 // 初始化拖拽监听
