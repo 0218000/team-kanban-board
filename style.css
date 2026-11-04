@@ -1,53 +1,83 @@
-*{
-    margin:0;
-    padding:0;
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
     font-family: sans-serif;
 }
-.container{
-    padding:20px;
+body {
+    background-color: #f0f2f5;
+    padding: 20px;
 }
-h1{
-    text-align:center;
-    margin-bottom:20px;
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
 }
-#addTaskBtn{
-    padding:8px 16px;
-    background:#2288ee;
+h1 {
+    text-align: center;
+    margin-bottom: 16px;
+}
+/* 搜索框样式 */
+.search-box {
+    margin-bottom:16px;
+}
+#searchInput {
+    width:100%;
+    padding:10px 14px;
+    font-size:16px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+.add-btn {
+    padding:10px 18px;
+    background:#2563eb;
     color:white;
     border:none;
-    border-radius:6px;
+    border-radius:8px;
     cursor:pointer;
     margin-bottom:20px;
+    font-size:16px;
 }
-.board{
-    display:flex;
+.board {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
     gap:16px;
 }
-.column{
-    width:32%;
-    background:#f3f4f6;
+.column {
+    background:#ebecf0;
+    padding:16px;
+    border-radius:10px;
+    min-height:450px;
+}
+.column h2 {
+    font-size:18px;
+    margin-bottom:14px;
+}
+.task-card {
+    background:white;
     padding:12px;
     border-radius:8px;
-    min-height:400px;
+    margin-bottom:10px;
+    cursor: grab;
+    border-left:4px solid #2563eb;
 }
-.column h3{
-    margin-bottom:12px;
-    padding-bottom:8px;
-    border-bottom:1px solid #ccc;
+.task-card.high {
+    border-left-color:#ef4444;
 }
-.task-card{
-    background:#fff;
-    padding:10px;
-    margin:8px 0;
-    border-radius:6px;
-    border:1px solid #ddd;
-    cursor:grab;
+.task-card.mid {
+    border-left-color:#f59e0b;
 }
-.task-card:active{
-    cursor:grabbing;
+.task-card.low {
+    border-left-color:#10b981;
 }
-.modal{
+.task-card h4 {
+    margin-bottom:6px;
+}
+.task-card p {
+    font-size:14px;
+    color:#555;
+    margin-bottom:4px;
+}
+.modal {
     display:none;
     position:fixed;
     top:0;
@@ -56,34 +86,35 @@ h1{
     height:100%;
     background:rgba(0,0,0,0.4);
 }
-.modal-content{
+.modal-content {
     background:white;
-    width:400px;
+    width:420px;
     margin:100px auto;
     padding:20px;
-    border-radius:8px;
+    border-radius:10px;
     position:relative;
 }
-.close{
+.close {
     position:absolute;
-    right:15px;
-    top:10px;
+    top:12px;
+    right:16px;
     font-size:24px;
     cursor:pointer;
 }
-.modal-content input,
-.modal-content textarea,
-.modal-content select{
+.modal-content input,.modal-content textarea,.modal-content select {
     width:100%;
-    margin:6px 0;
-    padding:8px;
+    padding:9px;
+    margin:8px 0;
+    border:1px solid #ddd;
+    border-radius:6px;
 }
-#saveTaskBtn{
-    margin-top:8px;
-    padding:6px 12px;
-    background:#2288ee;
+.modal-content button {
+    width:100%;
+    padding:10px;
+    background:#2563eb;
     color:white;
     border:none;
-    border-radius:4px;
+    border-radius:6px;
     cursor:pointer;
+    margin-top:8px;
 }
