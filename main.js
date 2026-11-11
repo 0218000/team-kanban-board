@@ -1,38 +1,46 @@
 function getTasks() {
-  return JSON.parse(localStorage.getItem('kanbanTasks') || '[]');
+    return JSON.parse(localStorage.getItem('kanbanTasks') || '[]');
 }
+
 function saveTasks(tasks) {
-  localStorage.setItem('kanbanTasks', JSON.stringify(tasks));
+    localStorage.setItem('kanbanTasks', JSON.stringify(tasks));
 }
+
 function addTask(title) {
-  if (!title.trim()) return;
-  const tasks = getTasks();
-  tasks.push({ id: Date.now(), title: title, status: 'todo' });
-  saveTasks(tasks);
-  renderTasks();
-  document.getElementById('taskInput').value = '';
+    if (!title.trim()) return;
+    const tasks = getTasks();
+    tasks.push({ id: Date.now(), title: title, status: 'todo' });
+    saveTasks(tasks);
+    renderTasks();
+    document.getElementById('taskInput').value = '';
 }
+
 function deleteTask(id) {
-  let tasks = getTasks();
-  tasks = tasks.filter(t => t.id !== id);
-  saveTasks(tasks);
-  renderTasks();
+    let tasks = getTasks();
+    tasks = tasks.filter(t => t.id !== id);
+    saveTasks(tasks);
+    renderTasks();
 }
+
 function renderTasks() {
-  const tasks = getTasks();
-  document.querySelectorAll('.task-list').forEach(el => el.innerHTML = '');
-  tasks.forEach(task => {
-    const column = document.querySelector(`[data-status="${task.status}"] .task-list`);
-    if (!column) return;
-    const card = document.createElement('div');
-    card.className = 'task-card';
-    card.draggable = true;
-    card.dataset.id = task.id;
-    card.innerHTML = `<span>${task.title}</span><button class="delete-btn" onclick="deleteTask(${task.id})">×</button>`;
-    card.addEventListener('dragstart', dragStart);
-    column.appendChild(card);
-  });
+    const tasks = getTasks();
+    
+    document.querySelectorAll('.task-list').forEach(el => el.innerHTML = '');
+
+    tasks.forEach(task => {
+    
+        const column = document.querySelector(`[data-status="${task.status}"] .task-list`);
+        if (!column) return;
+
+        const card = document.createElement('div');
+        card.className = 'task-card';
+        card.draggable = true;
+        card.dataset.id = task.id;
+        card.innerHTML = `<span>${task.title}</span><button class="delete-btn" onclick="deleteTask(${task.id})">删除</button>`;
+        column.appendChild(card);
+    });
 }
+
 let draggedId = null;
 function dragStart(e) {
   draggedId = parseInt(e.target.dataset.id);
